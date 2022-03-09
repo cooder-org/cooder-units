@@ -29,7 +29,7 @@ jdk1.8+
 
 方法2:
 ```java
-  import static com.ke.utopia.units.Units.*;
+  import static org.cooder.units.Units.*;
   
   UnitNumber<?> 规格 = new UnitNumber(5, 千克.divide(桶));
 ```
