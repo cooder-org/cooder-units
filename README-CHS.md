@@ -1,6 +1,8 @@
 
 # cooder-units
-------
+
+[![codecov](https://codecov.io/gh/cooder-org/cooder-units/branch/main/graph/badge.svg?token=0L2AU184LV)](https://codecov.io/gh/cooder-org/cooder-units)
+
 带单位计算库。
 
 现实生活中的很多量都是带单位的，缺少单位时的数值本身没有任何含义，只进行数值运算后附加单位的做法非常容易导致bug。
