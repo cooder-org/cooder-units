@@ -1,6 +1,7 @@
 
 # cooder-units
 
+![build](https://github.com/cooder-org/cooder-units/actions/workflows/maven.yml/badge.svg)
 [![codecov](https://codecov.io/gh/cooder-org/cooder-units/branch/main/graph/badge.svg?token=0L2AU184LV)](https://codecov.io/gh/cooder-org/cooder-units)
 
 [中文版](README-CHS.md)
