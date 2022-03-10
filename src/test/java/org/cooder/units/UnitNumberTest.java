@@ -9,6 +9,7 @@ import static org.cooder.units.Units.米;
 
 import java.math.BigDecimal;
 
+import javax.measure.quantity.Dimensionless;
 import javax.measure.quantity.Length;
 import javax.measure.quantity.Time;
 
@@ -74,6 +75,11 @@ public class UnitNumberTest {
         area = length.multiply(width).assertMustBe(平方米);
         espect = new BigDecimal("5.2").multiply(BigDecimal.valueOf(1));
         Assert.assertEquals(area.getValue(), espect);
+
+        // 乘单位1
+        UnitNumber<Dimensionless> one = new UnitNumber<>(1, Units.单位一);
+        length = length.multiply(one).asType(Length.class);
+        Assert.assertEquals("5.2 m", length.toString());
     }
 
     @Test
