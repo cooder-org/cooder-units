@@ -1,6 +1,8 @@
 
 # cooder-units
-------
+
+[![codecov](https://codecov.io/gh/cooder-org/cooder-units/branch/main/graph/badge.svg?token=0L2AU184LV)](https://codecov.io/gh/cooder-org/cooder-units)
+
 [中文版](README-CHS.md)
 
 Many quantities in real world have units, and the value itself has no meaning when the unit is missing. The practice of only adding units after numerical calculation is very easy to cause bugs.
