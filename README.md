@@ -1,11 +1,15 @@
 
 # cooder-units
 ------
-带单位计算库。
+[中文版](README-CHS.md)
 
-现实生活中的很多量都是带单位的，缺少单位时的数值本身没有任何含义，只进行数值运算后附加单位的做法非常容易导致bug。
-不难理解，对于带单位量的计算过程，也应该让单位参与运算。
-这个库通过封装jsr-385，提供了单位参与运算的能力，并内置了一些常见的非标准单位。
+Many quantities in real world have units, and the value itself has no meaning when the unit is missing. The practice of only adding units after numerical calculation is very easy to cause bugs.
+It is not difficult to understand that for the calculation process with unit quantities, the unit should also be involved in the operation.
+
+Currently, developers have to either use an inadequate model of measurement or to create a custom solution. Either choice can lead to significant programmatic errors. The default practice of modeling a measure as a simple 
+number with no regard to the units it represents creates fragile code, as the value may easily be misinterpreted if the unit must be inferred solely from contextual clues.
+
+This library supporting robust representation and correct handling of quantities, by encapsulating jsr-385, and has built-in some common non-standard units.
 
 ## Dependencies
 - base on [jsr-385](https://jcp.org/aboutJava/communityprocess/mrel/jsr385/index.html)
@@ -14,83 +18,86 @@
 ## JDK version
 jdk1.8+
 
-## 如何使用
+## quick start
 
-1、初始化
+1、initialization units
 ```java
     Units.init()
 ```
 
-2、创建带单位的量
-方法1: 
+2、create quantity with units
+method 1: 
 ```java
-  UnitNumber<?> 规格 = UnitNumber.parse("5 kg/桶");
+  UnitNumber<?> speed = UnitNumber.parse("5 m/s");
 ```
 
-方法2:
+method 2: (recommend)
 ```java
-  import static org.cooder.units.Units.*;
+  import static tech.units.indriya.unit.Units.*;
   
-  UnitNumber<?> 规格 = new UnitNumber(5, 千克.divide(桶));
+  UnitNumber<?> speed = new UnitNumber(5, METRE.divide(SECOND));
 ```
-**建议优先使用方法2**
 
-3、带单位加法
+3、add
 ```java
   UnitNumber<Length> length = UnitNumber.parse("10 m").asType(Length.class);
   UnitNumber<Length> width = UnitNumber.parse("20 cm").asType(Length.class);
   UnitNumber<Length> sum = length.add(width);
 ```
 
-4、带单位减法
+4、subtract
 ```java
   UnitNumber<Length> length = UnitNumber.parse("10 m").asType(Length.class);
   UnitNumber<Length> width = UnitNumber.parse("20 cm").asType(Length.class);
   UnitNumber<Length> sub = length.subtract(width);
 ```
 
-5、带单位乘法
+5、multipy
 ```java
+  import static tech.units.indriya.unit.Units.*;
+
   UnitNumber<Length> length = UnitNumber.parse("10 m").asType(Length.class);
   UnitNumber<Length> width = UnitNumber.parse("20 cm").asType(Length.class);
   UnitNumber<?> area = length.multipy(width);
   
-  // 如果需要校验结果单位是否符合预期，可以这样：
-  area.assertMustBe(Units.平方米);
+  // If you need to verify that the result unit is as expected, you can do like this：
+  area.assertMustBe(SQUARE_METRE);
   
-  // 或直接这样：
-  UnitNumber<?> area = length.multipy(width).assertMustBe(Units.平方米);
+  // or directly like this：
+  UnitNumber<?> area = length.multipy(width).assertMustBe(SQUARE_METRE);
 
 ```
 
-6、带单位除法
+6、divide
 ```java
-  UnitNumber<?> 规格 = UnitNumber.parse("5 kg/桶");
-  UnitNumber<?> 使用量 = UnitNumber.parse("500 千克");
-  UnitNumber<?> 下单量 = 使用量.divide(规格).assertMustBe(symbolFor("桶"));
-  Assert.assertTrue(下单量.getValue().equals(100));
+  import static tech.units.indriya.unit.Units.*;
+  
+  UnitNumber<?> spec = UnitNumber.parse("1 kg/l");
+  UnitNumber<?> useQuantity = UnitNumber.parse("100 kg");
+  UnitNumber<?> orderQuantity = useQuantity.divide(spec).assertMustBe(LITRE);
+  
+  Assert.assertTrue(orderQuantity.getValue().equals(100));
 ```
 
-7、查找单位实例
+7、find the instance of Unit
 ```java
-  // 通过单位符号
+  // find by unit symbol
   Unit unit1 = Units.symbolFor("kg");
-	
-  // 通过单位别名
-  Unit unit2 = Units.nameFor("千克");
 
-  // 组合单位时
-  Unit unit3 = Units.parse("千克/桶");
+  // combination unit 
+  Unit unit3 = Units.parse("m/s");
 ```
 
-8、单位转换
+8、unit conversion 
 ```java
-  UnitNumber<WorkTime> m = parse("10 人时").asType(WorkTime.class);
-  m = m.to(Units.人天);
-  Assert.assertTrue("1.25 人天".equals(m.toString()));
+  import static tech.units.indriya.unit.Units.*;
+  
+  UnitNumber<Mass> m = parse("1250 g").asType(Mass.class);
+  m = m.to(KILOGRAM);
+  Assert.assertTrue("1.25 kg".equals(m.toString()));
 ```
 
-## 提示
-乘法和除法时会将单位自动转化为国际单位制，如果需要转换为其他非标准单位，可以使用UnitNumber#to方法。
+## hint
+Units are automatically converted to SI units during multiplication and division. If you need to convert to other non-standard units, you can use the UnitNumber#to method.
 
-其他更多用法请参考项目的java doc.
+For more usage, please refer to the java doc of the project.
