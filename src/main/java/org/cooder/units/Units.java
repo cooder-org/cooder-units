@@ -1,6 +1,5 @@
 package org.cooder.units;
 
-import static tech.units.indriya.AbstractUnit.ONE;
 import static tech.units.indriya.function.AbstractConverter.IDENTITY;
 import static tech.units.indriya.unit.Units.CUBIC_METRE;
 import static tech.units.indriya.unit.Units.KELVIN;
@@ -32,6 +31,7 @@ import org.cooder.units.quantity.Money;
 import org.cooder.units.quantity.SKU;
 import org.cooder.units.quantity.WorkTime;
 
+import tech.units.indriya.AbstractUnit;
 import tech.units.indriya.format.SimpleQuantityFormat;
 import tech.units.indriya.format.SimpleUnitFormat;
 import tech.units.indriya.function.AddConverter;
@@ -45,6 +45,19 @@ public final class Units {
     private static final Set<Unit<?>> units = new HashSet<>();
     private static final Map<String, Unit<?>> symbolMap = new HashMap<>();
     private static final Map<String, Unit<?>> nameMap = new HashMap<>();
+
+    //
+    // 无量纲单位
+    //
+    /**
+     * @see tech.units.indriya.unit.AlternateUnit#ONE
+     */
+    public static final Unit<Dimensionless> 单位一 = AbstractUnit.ONE;
+
+    /**
+     * @see tech.units.indriya.unit.AlternateUnit#ONE
+     */
+    public static final Unit<Dimensionless> ONE = AbstractUnit.ONE;
 
     //
     // 长度单位
@@ -130,13 +143,17 @@ public final class Units {
     }
 
     /**
-     * 通过单位的符号查找单位实例
+     * 通过单位的符号查找单位实例，如果symbol为空时返回无量纲单位, 即 {@link Units#ONE}
      * 
      * @param symbol
      * 
      * @return
      */
     public static Unit<?> symbolFor(String symbol) {
+        if (!notEmpty(symbol)) {
+            return ONE;
+        }
+        
         Unit<?> u = symbolMap.get(symbol);
         if (u == null) {
             u = getUnit(BASIC_UNITS.getUnits(), symbol);
