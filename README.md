@@ -23,6 +23,15 @@ jdk1.8+
 
 ## quick start
 
+0、config (maven)  
+```xml
+<dependency>
+  <groupId>org.cooder</groupId>
+  <artifactId>cooder-units</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 1、initialization units
 ```java
     Units.init()
