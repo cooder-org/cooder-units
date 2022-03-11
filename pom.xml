@@ -6,7 +6,7 @@
 
   <groupId>org.cooder</groupId>
   <artifactId>cooder-units</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <name>cooder-units</name>
   <packaging>jar</packaging>
