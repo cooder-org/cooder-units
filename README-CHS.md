@@ -18,6 +18,15 @@ jdk1.8+
 
 ## 如何使用
 
+0、引入依赖（Maven）  
+```xml
+<dependency>
+  <groupId>org.cooder</groupId>
+  <artifactId>cooder-units</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 1、初始化
 ```java
     Units.init()
