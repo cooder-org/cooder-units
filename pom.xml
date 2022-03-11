@@ -9,8 +9,9 @@
   <version>1.0.0</version>
 
   <name>cooder-units</name>
+  <description>unit calculation library</description>
   <packaging>jar</packaging>
-  <url>http://www.cooder.org</url>
+  <url>https://github.com/cooder-org/cooder-units</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
