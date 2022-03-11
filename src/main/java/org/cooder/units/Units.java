@@ -145,9 +145,9 @@ public final class Units {
     /**
      * 通过单位的符号查找单位实例，如果symbol为空时返回无量纲单位, 即 {@link Units#ONE}
      * 
-     * @param symbol
+     * @param symbol 单位的符号，比如长度单位米: m
      * 
-     * @return
+     * @return Unit实例
      */
     public static Unit<?> symbolFor(String symbol) {
         if (!notEmpty(symbol)) {
@@ -164,9 +164,9 @@ public final class Units {
     /**
      * 通过单位的别名查找单位实例
      * 
-     * @param name
+     * @param name 单位别名，比如质量单位kg: 千克
      * 
-     * @return
+     * @return Unit实例
      */
     public static Unit<?> nameFor(String name) {
         return nameMap.get(name);
@@ -175,7 +175,10 @@ public final class Units {
     /**
      * 解析单位，当单位是组合单位时，使用这个方法。比如：<br> 
      *   "kg/桶"
-     * @return
+     *
+     * @param symbol 单位符号，比如速度单位: m/s
+     *
+     * @return Unit实例
      */
     public static Unit<?> parse(String symbol) {
         String e = String.format("0 %s", symbol);
@@ -196,6 +199,7 @@ public final class Units {
      * 
      * @param unit  单位实例
      * @param alias 别名
+     * @param <U>   单位的类型
      * 
      * @return 参数中的单位实例
      */

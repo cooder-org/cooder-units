@@ -7,7 +7,7 @@ import javax.measure.format.MeasurementParseException;
 import tech.units.indriya.quantity.Quantities;
 
 /**
- * 表示现象、物体或物质的定量特性，比如质量、时间、距离、角度等。 <br/>
+ * 表示现象、物体或物质的定量特性，比如质量、时间、距离、角度等。 <br>
  * 这个类是
  * <a href=
  * "https://jcp.org/aboutJava/communityprocess/mrel/jsr385/index.html">JSR-385</a>
@@ -118,7 +118,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * 求倒数，数值和单位都会求倒数，比如: <br>
      * "1s" 的倒数是 "0.1 1/s"
      * 
-     * @return
+     * @return 倒数
      */
     public UnitNumber<?> inverse() {
         Quantity<?> res = q.inverse();
@@ -150,7 +150,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
     /**
      * 转换为国际标准单位制
      * 
-     * @return
+     * @return 单位转换后量
      */
     public UnitNumber<Q> toSystemUnit() {
         return to(getUnit().getSystemUnit());
@@ -231,7 +231,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * 
      * @param cs 字符串
      * 
-     * @return
+     * @return 解析出来的UnitNumber实例
      */
     public static UnitNumber<?> parse(CharSequence cs) {
         try {
