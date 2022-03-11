@@ -22,7 +22,7 @@ jobs:
         java-version: '8'
         cache: maven
     - name: Build with Maven
-      run: mvn clean jacoco:prepare-agent test jacoco:report
+      run: mvn clean test
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
