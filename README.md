@@ -3,6 +3,7 @@
 
 ![build](https://github.com/cooder-org/cooder-units/actions/workflows/maven.yml/badge.svg)
 [![codecov](https://codecov.io/gh/cooder-org/cooder-units/branch/main/graph/badge.svg?token=0L2AU184LV)](https://codecov.io/gh/cooder-org/cooder-units)
+[![Maven Central](https://img.shields.io/maven-central/v/org.cooder/cooder-units.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.cooder%22%20AND%20a:%22cooder-units%22)
 
 [中文版](README-CHS.md)
 
