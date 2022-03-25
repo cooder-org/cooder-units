@@ -124,6 +124,11 @@ public final class Units {
     public static final Unit<Money> 万元 = addUnit(new TransformedUnit<>("万元", 元.multiply(10000), IDENTITY).asType(Money.class), "万元");
 
     //
+    // 未知单位
+    //
+    public static final Unit<Dimensionless> 未知 = addUnit(AlternateUnit.<Dimensionless>of(ONE, "未知"), "未知");
+
+    //
     // SKU单位
     //
     public static final String[] SKU_UNITS_NAMES = new String[] {

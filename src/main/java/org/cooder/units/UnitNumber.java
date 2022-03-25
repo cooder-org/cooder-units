@@ -22,6 +22,8 @@ import tech.units.indriya.quantity.Quantities;
  * @param <Q> 量的类型
  */
 public final class UnitNumber<Q extends Quantity<Q>> {
+    public static final UnitNumber<?> UNKONWN = new UnitNumber<>(1, Units.未知);
+
     private final Quantity<Q> q;
 
     public UnitNumber(Number value, Unit<Q> unit) {
