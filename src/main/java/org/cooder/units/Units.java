@@ -155,12 +155,12 @@ public final class Units {
      * @return Unit实例
      */
     public static Unit<?> symbolFor(String symbol) {
-        if (!notEmpty(symbol)) {
+        if(!notEmpty(symbol)) {
             return ONE;
         }
-        
+
         Unit<?> u = symbolMap.get(symbol);
-        if (u == null) {
+        if(u == null) {
             u = getUnit(BASIC_UNITS.getUnits(), symbol);
         }
         return u;
@@ -176,10 +176,10 @@ public final class Units {
     public static Unit<?> nameFor(String name) {
         return nameMap.get(name);
     }
-    
+
     /**
-     * 解析单位，当单位是组合单位时，使用这个方法。比如：<br> 
-     *   "kg/桶"
+     * 解析单位，当单位是组合单位时，使用这个方法。比如：<br>
+     * "kg/桶"
      *
      * @param symbol 单位符号，比如速度单位: m/s
      *
@@ -192,10 +192,33 @@ public final class Units {
 
     static Unit<?> getUnit(String string) {
         Unit<?> u = getUnit(units, string);
-        if (u == null) {
+        if(u == null) {
             u = getUnit(BASIC_UNITS.getUnits(), string);
         }
         return u;
+    }
+
+    /**
+     * 为指定单位增加别名
+     * 
+     * @param unit  需要添加别名的单位
+     * @param alias 别名
+     * 
+     * @throw IllegalArgumentException 如果单位不存在
+     * @throw IllegalStateException 如果别名重复
+     */
+    public static <U extends Unit<?>> U addAlias(U unit, String alias) {
+        if(!units.contains(unit)) {
+            throw new IllegalArgumentException("unit not exist.");
+        }
+
+        if(notEmpty(alias)) {
+            Unit<?> pre = nameMap.put(alias, unit);
+            requireNull(pre);
+            SimpleUnitFormat.getInstance().alias(unit, alias);
+        }
+
+        return unit;
     }
 
     /**
@@ -211,13 +234,13 @@ public final class Units {
     public static <U extends Unit<?>> U addUnit(U unit, String alias) {
         units.add(unit);
 
-        if (notEmpty(unit.getSymbol())) {
+        if(notEmpty(unit.getSymbol())) {
             Unit<?> pre = symbolMap.put(unit.getSymbol(), unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().label(unit, unit.getSymbol());
         }
 
-        if (notEmpty(alias)) {
+        if(notEmpty(alias)) {
             Unit<?> pre = nameMap.put(alias, unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().alias(unit, alias);
@@ -227,7 +250,7 @@ public final class Units {
     }
 
     private static void requireNull(Unit<?> pre) {
-        if (pre != null) {
+        if(pre != null) {
             String msg = String.format("[%s] duplicated", pre);
             throw new IllegalStateException(msg);
         }
