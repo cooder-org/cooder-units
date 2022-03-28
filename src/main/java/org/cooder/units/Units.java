@@ -204,8 +204,8 @@ public final class Units {
      * @param unit  需要添加别名的单位
      * @param alias 别名
      * 
-     * @throw IllegalArgumentException 如果单位不存在
-     * @throw IllegalStateException 如果别名重复
+     * @throws IllegalArgumentException 如果单位不存在
+     * @throws IllegalStateException    如果别名重复
      */
     public static <U extends Unit<?>> U addAlias(U unit, String alias) {
         if(!units.contains(unit)) {
@@ -228,6 +228,8 @@ public final class Units {
      * @param unit  单位实例
      * @param alias 别名
      * @param <U>   单位的类型
+     * 
+     * @throws IllegalStateException 如果单位别名或单位符号重复
      * 
      * @return 参数中的单位实例
      */
