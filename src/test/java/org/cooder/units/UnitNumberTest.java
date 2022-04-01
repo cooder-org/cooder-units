@@ -14,6 +14,7 @@ import javax.measure.quantity.Length;
 import javax.measure.quantity.Time;
 
 import org.cooder.units.quantity.Money;
+import org.cooder.units.quantity.SKU;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -171,4 +172,49 @@ public class UnitNumberTest {
         Assert.assertTrue(l1.isEquivalentTo(l2));
     }
 
+    @Test
+    public void testAssertMustBe() {
+        UnitNumber<?> l1 = parse("10 m");
+        UnitNumber<?> l2 = new UnitNumber<>(1000, 厘米);
+
+        String expMsg = null;
+        try {
+            l1.assertMustBe(l2.getUnit());
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[m] is not [cm]", expMsg);
+    }
+
+    @Test
+    public void testSkuUnitNotEq() {
+        UnitNumber<SKU> l1 = parse("10 个").asType(SKU.class);
+        UnitNumber<SKU> l2 = parse("10 框").asType(SKU.class);
+
+        String expMsg = null;
+        try {
+            l1.add(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+    }
+
+    @Test
+    public void testCompareTo() {
+        UnitNumber<SKU> l1 = parse("10 个").asType(SKU.class);
+        UnitNumber<SKU> l2 = parse("10 框").asType(SKU.class);
+        UnitNumber<SKU> l3 = parse("2 个").asType(SKU.class);
+
+        String expMsg = null;
+        try {
+            l1.compareTo(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+
+        int v = l1.compareTo(l3);
+        Assert.assertTrue(v > 0);
+    }
 }

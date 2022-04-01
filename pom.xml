@@ -6,7 +6,7 @@
 
   <groupId>org.cooder</groupId>
   <artifactId>cooder-units</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 
   <name>cooder-units</name>
   <description>unit calculation library</description>
