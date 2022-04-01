@@ -4,6 +4,7 @@ import javax.measure.Quantity;
 import javax.measure.Unit;
 import javax.measure.format.MeasurementParseException;
 
+import tech.units.indriya.function.Calculus;
 import tech.units.indriya.quantity.Quantities;
 
 /**
@@ -50,6 +51,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @return this + addend
      */
     public UnitNumber<Q> add(UnitNumber<Q> addend) {
+        checkDimensionless(addend.getUnit());
+
         Quantity<Q> res = q.add(addend.q);
         return cast(res);
     }
@@ -62,6 +65,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @return this - subtrahend
      */
     public UnitNumber<Q> subtract(UnitNumber<Q> subtrahend) {
+        checkDimensionless(subtrahend.getUnit());
+
         Quantity<Q> res = q.subtract(subtrahend.q);
         return cast(res);
     }
@@ -171,6 +176,21 @@ public final class UnitNumber<Q extends Quantity<Q>> {
         return q.isEquivalentTo(that.q);
     }
 
+    /**
+     * 将当前量与指定量进行比较, 如果两个量的单位不完全一致，会直接抛出异常
+     * 
+     * @param that 指定量
+     * 
+     * @return the value 0 if x == y; a value less than 0 if x < y; and a value
+     *         greater than 0 if x > y
+     * 
+     * @throws IllegalStateException 如果两者的单位不完全一样
+     */
+    public int compareTo(UnitNumber<?> that) {
+        assertMustBe(that.getUnit());
+        return Calculus.currentNumberSystem().compare(this.getValue(), that.getValue());
+    }
+
     public <T extends Quantity<T>> UnitNumber<T> asType(Class<T> type) throws ClassCastException {
         Quantity<T> res = q.asType(type);
         return cast(res);
@@ -182,10 +202,13 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @param that 指定的单位
      * 
      * @return this
+     * 
+     * @throws IllegalStateException 如果两者的单位不完全一样
      */
     public UnitNumber<Q> assertMustBe(Unit<?> that) {
-        if (!q.getUnit().toString().equals(that.toString())) {
-            String msg = String.format("[%s] is illegal", q.getUnit());
+        Unit<?> u = q.getUnit();
+        if(!u.isCompatible(that) || !u.toString().equals(that.toString())) {
+            String msg = String.format("[%s] is not [%s]", q.getUnit(), that);
             throw new IllegalStateException(msg);
         }
         return this;
@@ -198,7 +221,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      */
     public UnitNumber<Q> assertIncludedInUnits() {
         Unit<?> u = Units.getUnit(q.getUnit().toString());
-        if (u == null) {
+        if(u == null) {
             String msg = String.format("[%s] is illegal", q.getUnit());
             throw new IllegalStateException(msg);
         }
@@ -212,7 +235,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof UnitNumber) {
+        if(obj instanceof UnitNumber) {
             return q.equals(((UnitNumber<?>) obj).q);
         }
         return false;
@@ -221,6 +244,12 @@ public final class UnitNumber<Q extends Quantity<Q>> {
     @Override
     public int hashCode() {
         return q.hashCode();
+    }
+
+    private void checkDimensionless(Unit<Q> that) {
+        if(q.getUnit().isCompatible(Units.ONE)) {
+            assertMustBe(that);
+        }
     }
 
     /**
