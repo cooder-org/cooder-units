@@ -180,6 +180,15 @@ public class UnitNumberTest {
             expMsg = e.getMessage();
         }
         Assert.assertEquals("[个] is not [元]", expMsg);
+
+        UnitNumber<UNKNOWN> c4 = parse("10 元*人天/平米").asType(UNKNOWN.class);
+        expMsg = null;
+        try {
+            c4.to(c1.getUnit());
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[元·人天/m²] is not [元/m²]", expMsg);
     }
 
     @Test
@@ -247,6 +256,24 @@ public class UnitNumberTest {
     }
 
     @Test
+    public void testCompareToUnknown() {
+        UnitNumber<SKU> l1 = parse("10 个").asType(SKU.class);
+        UnitNumber<SKU> l2 = parse("10 框").asType(SKU.class);
+        UnitNumber<SKU> l3 = parse("2 个").asType(SKU.class);
+
+        String expMsg = null;
+        try {
+            UnitNumber.compare(l1, l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+
+        int v = UnitNumber.compare(l1, l3);
+        Assert.assertTrue(v > 0);
+    }
+
+    @Test
     public void testAddUnkownSKU() {
         UnitNumber<UNKNOWN> l1 = parse("10 个").asType(UNKNOWN.class);
         UnitNumber<UNKNOWN> l2 = parse("10 框").asType(UNKNOWN.class);
@@ -264,6 +291,12 @@ public class UnitNumberTest {
         Assert.assertEquals("12 个", r.toString());
 
         r = l1.subtract(l3).asType(SKU.class);
+        Assert.assertEquals("8 个", r.toString());
+
+        r = UnitNumber.add(l1, l3).asType(SKU.class);
+        Assert.assertEquals("12 个", r.toString());
+
+        r = UnitNumber.subtract(l1, l3).asType(SKU.class);
         Assert.assertEquals("8 个", r.toString());
     }
 

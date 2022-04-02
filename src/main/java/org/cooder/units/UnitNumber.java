@@ -340,8 +340,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      */
     public static int compare(UnitNumber<?> x, UnitNumber<?> y) {
         UnitNumber<UNKNOWN> n1 = x.asType(UNKNOWN.class);
-        UnitNumber<UNKNOWN> n2 = y.asType(UNKNOWN.class).to(n1.getUnit());
-        return Calculus.currentNumberSystem().compare(n1.getValue(), n2.getValue());
+        UnitNumber<UNKNOWN> n2 = y.asType(UNKNOWN.class);
+        return Calculus.currentNumberSystem().compare(n1.to(n2.getUnit()).getValue(), n2.getValue());
     }
 
     private static <T extends Quantity<T>> UnitNumber<T> cast(Quantity<T> q) {
