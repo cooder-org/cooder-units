@@ -15,6 +15,7 @@ import javax.measure.quantity.Time;
 
 import org.cooder.units.quantity.Money;
 import org.cooder.units.quantity.SKU;
+import org.cooder.units.quantity.UNKNOWN;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -152,6 +153,33 @@ public class UnitNumberTest {
 
         length = length.toSystemUnit();
         Assert.assertTrue("10 m".equals(length.toString()));
+
+        // 无量纲单位
+        UnitNumber<SKU> l1 = parse("10 个").asType(SKU.class);
+        UnitNumber<SKU> l2 = parse("10 框").asType(SKU.class);
+        String expMsg = null;
+        try {
+            l1.to(l2.getUnit());
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+
+        // 组合单位
+        UnitNumber<UNKNOWN> c1 = parse("10 元/平米").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> c2 = parse("0.0001 元/平方厘米").asType(UNKNOWN.class);
+
+        UnitNumber<UNKNOWN> r = c2.to(c1.getUnit());
+        Assert.assertEquals("1 元/m²", r.toString());
+
+        UnitNumber<UNKNOWN> c3 = parse("0.0001 个/平方厘米").asType(UNKNOWN.class);
+        expMsg = null;
+        try {
+            c3.to(c1.getUnit());
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [元]", expMsg);
     }
 
     @Test
@@ -216,5 +244,49 @@ public class UnitNumberTest {
 
         int v = l1.compareTo(l3);
         Assert.assertTrue(v > 0);
+    }
+
+    @Test
+    public void testAddUnkownSKU() {
+        UnitNumber<UNKNOWN> l1 = parse("10 个").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> l2 = parse("10 框").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> l3 = parse("2 个").asType(UNKNOWN.class);
+
+        String expMsg = null;
+        try {
+            l1.add(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+
+        UnitNumber<SKU> r = l1.add(l3).asType(SKU.class);
+        Assert.assertEquals("12 个", r.toString());
+
+        r = l1.subtract(l3).asType(SKU.class);
+        Assert.assertEquals("8 个", r.toString());
+    }
+
+    @Test
+    public void testAddUnkownComboOne() {
+        UnitNumber<UNKNOWN> l1 = parse("10 元/个").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> l2 = parse("10 元/框").asType(UNKNOWN.class);
+
+        String expMsg = null;
+        try {
+            l1.add(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[元/个] is not [元/框]", expMsg);
+    }
+
+    @Test
+    public void testAddUnkownCombo() {
+        UnitNumber<UNKNOWN> l1 = parse("10 元/平米").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> l2 = parse("0.0005 元/平方厘米").asType(UNKNOWN.class);
+
+        UnitNumber<UNKNOWN> r = l1.add(l2);
+        Assert.assertEquals("15 元/m²", r.toString());
     }
 }
