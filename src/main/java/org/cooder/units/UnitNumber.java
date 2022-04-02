@@ -188,8 +188,9 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * 
      * @param that 指定量
      * 
-     * @return the value 0 if x == y; a value less than 0 if x < y; and a value
-     *         greater than 0 if x > y
+     * @return the value 0 if x == y; a value less than 0 if x &lt; y; and a
+     *         value
+     *         greater than 0 if x &gt; y
      * 
      * @throws IllegalStateException 如果两者的单位不完全一样
      */
@@ -215,8 +216,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
     public UnitNumber<Q> assertMustBe(Unit<?> that) {
         Unit<?> u = q.getUnit();
         if(!u.isCompatible(that) || !u.toString().equals(that.toString())) {
-            String msg = String.format("[%s] is not [%s]", q.getUnit(), that);
-            throw new IllegalStateException(msg);
+            throw unitNotMatch(u, that);
         }
         return this;
     }
@@ -261,8 +261,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
 
         if(that instanceof ProductUnit) {
             if(!(u instanceof ProductUnit)) {
-                String msg = String.format("[%s] is not [%s]", u, that);
-                throw new IllegalStateException(msg);
+                throw unitNotMatch(u, that);
             }
 
             ProductUnit<Q> pu1 = (ProductUnit<Q>) u;
@@ -333,8 +332,9 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @param x one number
      * @param y another number
      * 
-     * @return the value 0 if x == y; a value less than 0 if x < y; and a value
-     *         greater than 0 if x > y
+     * @return the value 0 if x == y; a value less than 0 if x &lt; y; and a
+     *         value
+     *         greater than 0 if x &gt; y
      * 
      * @throws IllegalStateException if unit not compatible
      */
@@ -350,8 +350,12 @@ public final class UnitNumber<Q extends Quantity<Q>> {
 
     private static void assertMustEq(Unit<?> u, Unit<?> that) {
         if(!u.isCompatible(that) || !u.toString().equals(that.toString())) {
-            String msg = String.format("[%s] is not [%s]", u, that);
-            throw new IllegalStateException(msg);
+            throw unitNotMatch(u, that);
         }
+    }
+
+    private static IllegalStateException unitNotMatch(Unit<?> u, Unit<?> that) {
+        String msg = String.format("[%s] is not [%s]", u, that);
+        return new IllegalStateException(msg);
     }
 }
