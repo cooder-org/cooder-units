@@ -4,8 +4,11 @@ import javax.measure.Quantity;
 import javax.measure.Unit;
 import javax.measure.format.MeasurementParseException;
 
+import org.cooder.units.quantity.UNKNOWN;
+
 import tech.units.indriya.function.Calculus;
 import tech.units.indriya.quantity.Quantities;
+import tech.units.indriya.unit.ProductUnit;
 
 /**
  * 表示现象、物体或物质的定量特性，比如质量、时间、距离、角度等。 <br>
@@ -23,7 +26,7 @@ import tech.units.indriya.quantity.Quantities;
  * @param <Q> 量的类型
  */
 public final class UnitNumber<Q extends Quantity<Q>> {
-    public static final UnitNumber<?> UNKONWN = new UnitNumber<>(1, Units.未知);
+    public static final UnitNumber<?> UNKNOWN_NUMBER = new UnitNumber<>(1, Units.未知);
 
     private final Quantity<Q> q;
 
@@ -150,6 +153,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @return 单位转换后的量
      */
     public UnitNumber<Q> to(Unit<Q> unit) {
+        checkDimensionless(unit);
+
         Quantity<Q> res = q.to(unit);
         return cast(res);
     }
@@ -173,6 +178,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * @see javax.measure.Quantity#isEquivalentTo(Quantity)
      */
     public boolean isEquivalentTo(UnitNumber<Q> that) {
+        checkDimensionless(that.getUnit());
+
         return q.isEquivalentTo(that.q);
     }
 
@@ -186,9 +193,9 @@ public final class UnitNumber<Q extends Quantity<Q>> {
      * 
      * @throws IllegalStateException 如果两者的单位不完全一样
      */
-    public int compareTo(UnitNumber<?> that) {
-        assertMustBe(that.getUnit());
-        return Calculus.currentNumberSystem().compare(this.getValue(), that.getValue());
+    public int compareTo(UnitNumber<Q> that) {
+        checkDimensionless(that.getUnit());
+        return Calculus.currentNumberSystem().compare(this.getValue(), that.to(getUnit()).getValue());
     }
 
     public <T extends Quantity<T>> UnitNumber<T> asType(Class<T> type) throws ClassCastException {
@@ -247,8 +254,31 @@ public final class UnitNumber<Q extends Quantity<Q>> {
     }
 
     private void checkDimensionless(Unit<Q> that) {
+        Unit<Q> u = q.getUnit();
         if(q.getUnit().isCompatible(Units.ONE)) {
             assertMustBe(that);
+        }
+
+        if(that instanceof ProductUnit) {
+            if(!(u instanceof ProductUnit)) {
+                String msg = String.format("[%s] is not [%s]", u, that);
+                throw new IllegalStateException(msg);
+            }
+
+            ProductUnit<Q> pu1 = (ProductUnit<Q>) u;
+            ProductUnit<Q> pu2 = (ProductUnit<Q>) that;
+            if(pu1.getUnitCount() != pu2.getUnitCount()) {
+                String msg = String.format("[%s] is not [%s]", u, that);
+                throw new IllegalStateException(msg);
+            }
+
+            for (int i = 0; i < pu1.getUnitCount(); i++) {
+                Unit<?> u1 = pu1.getUnit(i);
+                Unit<?> u2 = pu2.getUnit(i);
+                if(u1.isCompatible(Units.ONE)) {
+                    assertMustEq(u1, u2);
+                }
+            }
         }
     }
 
@@ -273,7 +303,55 @@ public final class UnitNumber<Q extends Quantity<Q>> {
         }
     }
 
+    /**
+     * number1 + number2
+     * 
+     * @param number1
+     * @param number2
+     * 
+     * @return number1 + number2
+     */
+    public static UnitNumber<?> add(UnitNumber<?> number1, UnitNumber<?> number2) {
+        return number1.asType(UNKNOWN.class).add(number2.asType(UNKNOWN.class));
+    }
+
+    /**
+     * number1 - number2
+     * 
+     * @param number1
+     * @param number2
+     * 
+     * @return number1 - number2
+     */
+    public static UnitNumber<?> subtract(UnitNumber<?> number1, UnitNumber<?> number2) {
+        return number1.asType(UNKNOWN.class).subtract(number2.asType(UNKNOWN.class));
+    }
+
+    /**
+     * compare two number with unknown unit.
+     * 
+     * @param x one number
+     * @param y another number
+     * 
+     * @return the value 0 if x == y; a value less than 0 if x < y; and a value
+     *         greater than 0 if x > y
+     * 
+     * @throws IllegalStateException if unit not compatible
+     */
+    public static int compare(UnitNumber<?> x, UnitNumber<?> y) {
+        UnitNumber<UNKNOWN> n1 = x.asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> n2 = y.asType(UNKNOWN.class).to(n1.getUnit());
+        return Calculus.currentNumberSystem().compare(n1.getValue(), n2.getValue());
+    }
+
     private static <T extends Quantity<T>> UnitNumber<T> cast(Quantity<T> q) {
         return new UnitNumber<>(q);
+    }
+
+    private static void assertMustEq(Unit<?> u, Unit<?> that) {
+        if(!u.isCompatible(that) || !u.toString().equals(that.toString())) {
+            String msg = String.format("[%s] is not [%s]", u, that);
+            throw new IllegalStateException(msg);
+        }
     }
 }
