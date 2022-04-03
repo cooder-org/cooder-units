@@ -14,12 +14,29 @@ public class UnitsTest {
     }
 
     @Test
+    public void testAddUnit() {
+        Unit<?> u = Units.addUnit(Units.元.multiply(10.12), "欧元");
+        Assert.assertEquals(u, Units.parse("欧元"));
+
+        String errMsg = null;
+        try {
+            Units.addUnit(Units.元.multiply(10.12), "欧元");
+        } catch (IllegalStateException e) {
+            errMsg = e.getMessage();
+        }
+        Assert.assertEquals("[元*10.12] duplicated", errMsg);
+    }
+
+    @Test
     public void testSymbols() {
         Unit<?> u = Units.symbolFor("m");
         Assert.assertTrue(u.equals(Units.米));
 
         u = Units.symbolFor("K");
         Assert.assertTrue(u.equals(tech.units.indriya.unit.Units.KELVIN));
+
+        u = Units.symbolFor("");
+        Assert.assertEquals(u, Units.ONE);
     }
 
     @Test
@@ -31,6 +48,16 @@ public class UnitsTest {
         UnitNumber<Area> num = UnitNumber.parse("5 ㎡").asType(Area.class);
         Assert.assertTrue(num.getUnit().isEquivalentTo(Units.平方米));
         Assert.assertTrue("5 m²".equals(num.toString()));
+
+        Units.addAlias(Units.平方米, "");
+
+        String errMsg = null;
+        try {
+            Units.addAlias(Units.元.multiply(7.12), "");
+        } catch (IllegalArgumentException e) {
+            errMsg = e.getMessage();
+        }
+        Assert.assertEquals("unit not exist.", errMsg);
     }
 
     @Test
