@@ -312,14 +312,46 @@ public class UnitNumberTest {
             expMsg = e.getMessage();
         }
         Assert.assertEquals("[元/个] is not [元/框]", expMsg);
+
+        l1 = parse("10 平米/个").asType(UNKNOWN.class);
+        l2 = parse("10 平米/框").asType(UNKNOWN.class);
+
+        expMsg = null;
+        try {
+            l1.add(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
+
+        l1 = new UnitNumber<>(10, Units.平方厘米.divide(Units.symbolFor("个")).asType(UNKNOWN.class));
+        l2 = new UnitNumber<>(10, Units.平方厘米.divide(Units.symbolFor("框")).asType(UNKNOWN.class));
+        expMsg = null;
+        try {
+            l1.add(l2);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        Assert.assertEquals("[个] is not [框]", expMsg);
     }
 
     @Test
     public void testAddUnkownCombo() {
         UnitNumber<UNKNOWN> l1 = parse("10 元/平米").asType(UNKNOWN.class);
         UnitNumber<UNKNOWN> l2 = parse("0.0005 元/平方厘米").asType(UNKNOWN.class);
+        UnitNumber<UNKNOWN> l3 = new UnitNumber<>(0.0005, Units.人.divide(Units.平方厘米).asType(UNKNOWN.class));
 
         UnitNumber<UNKNOWN> r = l1.add(l2);
         Assert.assertEquals("15 元/m²", r.toString());
+
+        String expMsg = null;
+        try {
+            r = l1.add(l3);
+        } catch (IllegalStateException e) {
+            expMsg = e.getMessage();
+        }
+        System.out.println(expMsg);
+        Assert.assertEquals("[元] is not [man]", expMsg);
+
     }
 }
