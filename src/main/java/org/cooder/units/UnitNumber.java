@@ -126,7 +126,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
 
     /**
      * 求倒数，数值和单位都会求倒数，比如: <br>
-     * "1s" 的倒数是 "0.1 1/s"
+     * "10 s" 的倒数是 "0.1 1/s"
      * 
      * @return 倒数
      */
