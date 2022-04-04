@@ -42,9 +42,9 @@ import tech.units.indriya.unit.TransformedUnit;
 public final class Units {
     private static final tech.units.indriya.unit.Units BASIC_UNITS = tech.units.indriya.unit.Units.getInstance();
 
-    private static final Set<Unit<?>> units = new HashSet<>();
-    private static final Map<String, Unit<?>> symbolMap = new HashMap<>();
-    private static final Map<String, Unit<?>> nameMap = new HashMap<>();
+    private static final Set<Unit<?>> ALL_UNITS = new HashSet<>();
+    private static final Map<String, Unit<?>> SYMBOL_MAP = new HashMap<>();
+    private static final Map<String, Unit<?>> NAME_MAP = new HashMap<>();
 
     //
     // 无量纲单位
@@ -71,15 +71,15 @@ public final class Units {
     // 面积单位
     //
     public static final Unit<Area> 平方米 = addUnit(SQUARE_METRE, "平米");
-    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("c㎡", SQUARE_METRE.divide(100 * 100), IDENTITY), "平方厘米");
-    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("m㎡", SQUARE_METRE.divide(1000 * 1000), IDENTITY), "平方毫米");
+    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("c㎡", SQUARE_METRE.divide(10000), IDENTITY), "平方厘米");
+    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("m㎡", SQUARE_METRE.divide(1000000), IDENTITY), "平方毫米");
 
     //
     // 体积单位
     //
     public static final Unit<Volume> 立方米 = addUnit(CUBIC_METRE, "立方米");
-    public static final Unit<Volume> 立方厘米 = addUnit(new TransformedUnit<>("cm³", CUBIC_METRE.divide(100 * 100 * 100), IDENTITY), "立方厘米");
-    public static final Unit<Volume> 立方毫米 = addUnit(new TransformedUnit<>("mm³", CUBIC_METRE.divide(1000 * 1000 * 1000), IDENTITY), "立方毫米");
+    public static final Unit<Volume> 立方厘米 = addUnit(new TransformedUnit<>("cm³", CUBIC_METRE.divide(1000000), IDENTITY), "立方厘米");
+    public static final Unit<Volume> 立方毫米 = addUnit(new TransformedUnit<>("mm³", CUBIC_METRE.divide(1000000000), IDENTITY), "立方毫米");
 
     public static final Unit<Volume> 升 = addUnit(LITRE, "升");
     public static final Unit<Volume> 毫升 = addUnit(new TransformedUnit<>("ml", LITRE.divide(1000), IDENTITY), "毫升");
@@ -108,7 +108,7 @@ public final class Units {
     public static final Unit<Time> 秒 = addUnit(SECOND, "秒钟");
     public static final Unit<Time> 分 = addUnit(new TransformedUnit<>("min", SECOND.multiply(60), IDENTITY), "分钟");
     public static final Unit<Time> 小时 = addUnit(new TransformedUnit<>("hour", SECOND.multiply(3600), IDENTITY), "小时");
-    public static final Unit<Time> 天 = addUnit(new TransformedUnit<>("day", SECOND.multiply(3600 * 24), IDENTITY), "天");
+    public static final Unit<Time> 天 = addUnit(new TransformedUnit<>("day", SECOND.multiply(86400), IDENTITY), "天");
 
     //
     // 人工耗时单位
@@ -131,7 +131,7 @@ public final class Units {
     //
     // SKU单位
     //
-    public static final String[] SKU_UNITS_NAMES = new String[] {
+    private static final String[] SKU_UNITS_NAMES = new String[] {
             "根", "片", "条", "袋", "框", "套", "樘", "个", "台",
             "件", "只", "项", "扇", "卷", "桶", "盒", "张", "捆",
             "把", "架", "块", "瓶", "支", "箱", "付", "对", "次",
@@ -159,7 +159,7 @@ public final class Units {
             return ONE;
         }
 
-        Unit<?> u = symbolMap.get(symbol);
+        Unit<?> u = SYMBOL_MAP.get(symbol);
         if(u == null) {
             u = getUnit(BASIC_UNITS.getUnits(), symbol);
         }
@@ -174,7 +174,7 @@ public final class Units {
      * @return Unit实例
      */
     public static Unit<?> nameFor(String name) {
-        return nameMap.get(name);
+        return NAME_MAP.get(name);
     }
 
     /**
@@ -191,7 +191,7 @@ public final class Units {
     }
 
     static Unit<?> getUnit(String string) {
-        Unit<?> u = getUnit(units, string);
+        Unit<?> u = getUnit(ALL_UNITS, string);
         if(u == null) {
             u = getUnit(BASIC_UNITS.getUnits(), string);
         }
@@ -208,12 +208,12 @@ public final class Units {
      * @throws IllegalStateException    如果别名重复
      */
     public static <U extends Unit<?>> U addAlias(U unit, String alias) {
-        if(!units.contains(unit)) {
+        if(!ALL_UNITS.contains(unit)) {
             throw new IllegalArgumentException("unit not exist.");
         }
 
         if(notEmpty(alias)) {
-            Unit<?> pre = nameMap.put(alias, unit);
+            Unit<?> pre = NAME_MAP.put(alias, unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().alias(unit, alias);
         }
@@ -234,16 +234,16 @@ public final class Units {
      * @return 参数中的单位实例
      */
     public static <U extends Unit<?>> U addUnit(U unit, String alias) {
-        units.add(unit);
+        ALL_UNITS.add(unit);
 
         if(notEmpty(unit.getSymbol())) {
-            Unit<?> pre = symbolMap.put(unit.getSymbol(), unit);
+            Unit<?> pre = SYMBOL_MAP.put(unit.getSymbol(), unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().label(unit, unit.getSymbol());
         }
 
         if(notEmpty(alias)) {
-            Unit<?> pre = nameMap.put(alias, unit);
+            Unit<?> pre = NAME_MAP.put(alias, unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().alias(unit, alias);
         }
@@ -260,7 +260,7 @@ public final class Units {
 
     private static Unit<?> getUnit(Collection<Unit<?>> units, String string) {
         Objects.requireNonNull(string);
-        return units.stream().filter((u) -> string.equals(u.toString())).findAny().orElse(null);
+        return units.stream().filter(u -> string.equals(u.toString())).findAny().orElse(null);
     }
 
     private static boolean notEmpty(String str) {
