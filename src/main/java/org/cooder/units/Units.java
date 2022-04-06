@@ -139,7 +139,7 @@ public final class Units {
 
     static {
         for (String s : SKU_UNITS_NAMES) {
-            addUnit(AlternateUnit.<Dimensionless>of(ONE, s).asType(SKU.class), s);
+            addSkuUnit(s, s);
         }
     }
 
@@ -249,6 +249,20 @@ public final class Units {
         }
 
         return unit;
+    }
+
+    /**
+     * 添加一个自定义的SKU单位
+     * 
+     * @param symbol 单位符号
+     * @param name   单位名
+     * 
+     * @return 单位实例
+     * 
+     * @see Units#addUnit(Unit, String)
+     */
+    public static Unit<SKU> addSkuUnit(String symbol, String name) {
+        return addUnit(AlternateUnit.<Dimensionless>of(ONE, symbol).asType(SKU.class), name);
     }
 
     private static void requireNull(Unit<?> pre) {
