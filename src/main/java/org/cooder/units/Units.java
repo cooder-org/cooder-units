@@ -213,7 +213,7 @@ public final class Units {
         }
 
         if(notEmpty(alias)) {
-            Unit<?> pre = NAME_MAP.put(alias, unit);
+            Unit<?> pre = NAME_MAP.putIfAbsent(alias, unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().alias(unit, alias);
         }
@@ -237,13 +237,13 @@ public final class Units {
         ALL_UNITS.add(unit);
 
         if(notEmpty(unit.getSymbol())) {
-            Unit<?> pre = SYMBOL_MAP.put(unit.getSymbol(), unit);
+            Unit<?> pre = SYMBOL_MAP.putIfAbsent(unit.getSymbol(), unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().label(unit, unit.getSymbol());
         }
 
         if(notEmpty(alias)) {
-            Unit<?> pre = NAME_MAP.put(alias, unit);
+            Unit<?> pre = NAME_MAP.putIfAbsent(alias, unit);
             requireNull(pre);
             SimpleUnitFormat.getInstance().alias(unit, alias);
         }
