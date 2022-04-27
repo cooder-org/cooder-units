@@ -181,10 +181,10 @@ public class UnitNumberTest {
         }
         Assert.assertEquals("[个] is not [元]", expMsg);
 
-        UnitNumber<UNKNOWN> c4 = parse("10 元*人天/平米").asType(UNKNOWN.class);
+        UnitNumber<?> c4 = parse("10 元*人天/平米");
         expMsg = null;
         try {
-            c4.to(c1.getUnit());
+            UnitNumber.to(c4, c1.getUnit());
         } catch (IllegalStateException e) {
             expMsg = e.getMessage();
         }
