@@ -326,6 +326,10 @@ public final class UnitNumber<Q extends Quantity<Q>> {
         return number1.asType(UNKNOWN.class).subtract(number2.asType(UNKNOWN.class));
     }
 
+    public static UnitNumber<?> to(UnitNumber<?> number1, Unit<?> unit) {
+        return number1.asType(UNKNOWN.class).to(unit.asType(UNKNOWN.class));
+    }
+
     /**
      * compare two number with unknown unit.
      * 
