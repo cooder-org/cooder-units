@@ -25,7 +25,7 @@ jdk1.8+
 <dependency>
   <groupId>org.cooder</groupId>
   <artifactId>cooder-units</artifactId>
-  <version>1.0.2</version>
+  <version>${version}</version>
 </dependency>
 ```
 
