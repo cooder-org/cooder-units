@@ -154,6 +154,9 @@ public class UnitNumberTest {
         length = length.toSystemUnit();
         Assert.assertTrue("10 m".equals(length.toString()));
 
+        length = UnitNumber.to(length, Units.毫米).asType(Length.class);
+        Assert.assertTrue("10000 mm".equals(length.toString()));
+
         // 无量纲单位
         UnitNumber<SKU> l1 = parse("10 个").asType(SKU.class);
         UnitNumber<SKU> l2 = parse("10 框").asType(SKU.class);

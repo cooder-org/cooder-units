@@ -1,5 +1,7 @@
 package org.cooder.units;
 
+import java.util.Collection;
+
 import javax.measure.Unit;
 import javax.measure.quantity.Area;
 
@@ -8,9 +10,22 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class UnitsTest {
+
+    static Collection<Unit<?>> all;
+
     @BeforeClass
     public static void setup() {
         Units.init();
+        all = Units.all();
+    }
+
+    @Test
+    public void testAll() {
+        for (Unit<?> u : all) {
+            System.out.println(String.format("symbol: %s, name:%s", u.getSymbol(), u.getName()));
+            Assert.assertTrue(u.getSymbol() != null);
+            Assert.assertTrue(u.getName() != null);
+        }
     }
 
     @Test

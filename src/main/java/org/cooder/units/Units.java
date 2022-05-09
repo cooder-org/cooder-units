@@ -10,6 +10,7 @@ import static tech.units.indriya.unit.Units.RADIAN;
 import static tech.units.indriya.unit.Units.SECOND;
 import static tech.units.indriya.unit.Units.SQUARE_METRE;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,70 +64,70 @@ public final class Units {
     // 长度单位
     //
     public static final Unit<Length> 米 = addUnit(METRE, "米");
-    public static final Unit<Length> 延米 = addUnit(AlternateUnit.<Length>of(METRE, "延米"), "延米");
-    public static final Unit<Length> 厘米 = addUnit(new TransformedUnit<>("cm", METRE.divide(100), IDENTITY), "厘米");
-    public static final Unit<Length> 毫米 = addUnit(new TransformedUnit<>("mm", METRE.divide(1000), IDENTITY), "毫米");
+    public static final Unit<Length> 延米 = addUnit(AlternateUnit.<Length>of(METRE, "延米", "延米"), "延米");
+    public static final Unit<Length> 厘米 = addUnit(new TransformedUnit<>("cm", "厘米", METRE.divide(100), IDENTITY), "厘米");
+    public static final Unit<Length> 毫米 = addUnit(new TransformedUnit<>("mm", "毫米", METRE.divide(1000), IDENTITY), "毫米");
 
     //
     // 面积单位
     //
     public static final Unit<Area> 平方米 = addUnit(new TransformedUnit<>("m²", "平米", SQUARE_METRE, IDENTITY), "平米");
-    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("cm²", SQUARE_METRE.divide(10000), IDENTITY), "平方厘米");
-    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("mm²", SQUARE_METRE.divide(1000000), IDENTITY), "平方毫米");
+    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("cm²", "平方厘米", SQUARE_METRE.divide(10000), IDENTITY), "平方厘米");
+    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("mm²", "平方毫米", SQUARE_METRE.divide(1000000), IDENTITY), "平方毫米");
 
     //
     // 体积单位
     //
     public static final Unit<Volume> 立方米 = addUnit(new TransformedUnit<>("m³", "立方米", CUBIC_METRE, IDENTITY), "立方米");
-    public static final Unit<Volume> 立方厘米 = addUnit(new TransformedUnit<>("cm³", CUBIC_METRE.divide(1000000), IDENTITY), "立方厘米");
-    public static final Unit<Volume> 立方毫米 = addUnit(new TransformedUnit<>("mm³", CUBIC_METRE.divide(1000000000), IDENTITY), "立方毫米");
+    public static final Unit<Volume> 立方厘米 = addUnit(new TransformedUnit<>("cm³", "立方厘米", CUBIC_METRE.divide(1000000), IDENTITY), "立方厘米");
+    public static final Unit<Volume> 立方毫米 = addUnit(new TransformedUnit<>("mm³", "立方毫米", CUBIC_METRE.divide(1000000000), IDENTITY), "立方毫米");
 
     public static final Unit<Volume> 升 = addUnit(LITRE, "升");
-    public static final Unit<Volume> 毫升 = addUnit(new TransformedUnit<>("ml", LITRE.divide(1000), IDENTITY), "毫升");
+    public static final Unit<Volume> 毫升 = addUnit(new TransformedUnit<>("ml", "毫升", LITRE.divide(1000), IDENTITY), "毫升");
 
     //
     // 质量单位
     //
     public static final Unit<Mass> 千克 = addUnit(KILOGRAM, "千克");
-    public static final Unit<Mass> 克 = addUnit(new TransformedUnit<>("g", KILOGRAM.divide(1000), IDENTITY), "克");
+    public static final Unit<Mass> 克 = addUnit(new TransformedUnit<>("g", "克", KILOGRAM.divide(1000), IDENTITY), "克");
 
     //
     // 温度单位 \u2103 = ℃
     //
-    public static final Unit<Temperature> 摄氏度 = addUnit(new TransformedUnit<>("\u2103", KELVIN, new AddConverter(273.15)), "摄氏度");
+    public static final Unit<Temperature> 摄氏度 = addUnit(new TransformedUnit<>("\u2103", "摄氏度", KELVIN, new AddConverter(273.15)), "摄氏度");
 
     //
     // 角度, 1° = π/180
     //
     public static final Unit<Angle> 角度 = addUnit(
-            new TransformedUnit<>("°", RADIAN, MultiplyConverter.ofPiExponent(1).concatenate(MultiplyConverter.ofRational(1, 180))),
+            new TransformedUnit<>("°", "角度", RADIAN, MultiplyConverter.ofPiExponent(1).concatenate(MultiplyConverter.ofRational(1, 180))),
             "角度");
 
     //
     // 时间单位
     //
     public static final Unit<Time> 秒 = addUnit(SECOND, "秒钟");
-    public static final Unit<Time> 分 = addUnit(new TransformedUnit<>("min", SECOND.multiply(60), IDENTITY), "分钟");
-    public static final Unit<Time> 小时 = addUnit(new TransformedUnit<>("hour", SECOND.multiply(3600), IDENTITY), "小时");
-    public static final Unit<Time> 天 = addUnit(new TransformedUnit<>("day", SECOND.multiply(86400), IDENTITY), "天");
+    public static final Unit<Time> 分 = addUnit(new TransformedUnit<>("min", "分钟", SECOND.multiply(60), IDENTITY), "分钟");
+    public static final Unit<Time> 小时 = addUnit(new TransformedUnit<>("hour", "小时", SECOND.multiply(3600), IDENTITY), "小时");
+    public static final Unit<Time> 天 = addUnit(new TransformedUnit<>("day", "天", SECOND.multiply(86400), IDENTITY), "天");
 
     //
     // 人工耗时单位
     //
-    public static final Unit<Dimensionless> 人 = addUnit(AlternateUnit.<Dimensionless>of(ONE, "man"), "人");
-    public static final Unit<WorkTime> 人时 = addUnit(new TransformedUnit<>("人时", 人.multiply(小时), IDENTITY).asType(WorkTime.class), "人时");
-    public static final Unit<WorkTime> 人天 = addUnit(new TransformedUnit<>("人天", 人时.multiply(8), IDENTITY), "人天");
+    public static final Unit<Dimensionless> 人 = addUnit(AlternateUnit.<Dimensionless>of(ONE, "man", "人"), "人");
+    public static final Unit<WorkTime> 人时 = addUnit(new TransformedUnit<>("人时", "人时", 人.multiply(小时), IDENTITY).asType(WorkTime.class), "人时");
+    public static final Unit<WorkTime> 人天 = addUnit(new TransformedUnit<>("人天", "人天", 人时.multiply(8), IDENTITY), "人天");
 
     //
     // 货币单位
     //
-    public static final Unit<Money> 元 = addUnit(AlternateUnit.of(ONE, "元").asType(Money.class), "元");
-    public static final Unit<Money> 万元 = addUnit(new TransformedUnit<>("万元", 元.multiply(10000), IDENTITY).asType(Money.class), "万元");
+    public static final Unit<Money> 元 = addUnit(AlternateUnit.of(ONE, "元", "元").asType(Money.class), "元");
+    public static final Unit<Money> 万元 = addUnit(new TransformedUnit<>("万元", "万元", 元.multiply(10000), IDENTITY).asType(Money.class), "万元");
 
     //
     // 未知单位
     //
-    public static final Unit<Dimensionless> 未知 = addUnit(AlternateUnit.<Dimensionless>of(ONE, "未知"), "未知");
+    public static final Unit<Dimensionless> 未知 = addUnit(AlternateUnit.<Dimensionless>of(ONE, "未知", "未知"), "未知");
 
     //
     // SKU单位
@@ -262,7 +263,11 @@ public final class Units {
      * @see Units#addUnit(Unit, String)
      */
     public static Unit<SKU> addSkuUnit(String symbol, String name) {
-        return addUnit(AlternateUnit.<Dimensionless>of(ONE, symbol).asType(SKU.class), name);
+        return addUnit(AlternateUnit.<Dimensionless>of(ONE, symbol, name).asType(SKU.class), name);
+    }
+
+    static Collection<Unit<?>> all() {
+        return new ArrayList<>(ALL_UNITS);
     }
 
     private static void requireNull(Unit<?> pre) {
