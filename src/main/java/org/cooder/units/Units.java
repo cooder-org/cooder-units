@@ -70,14 +70,14 @@ public final class Units {
     //
     // 面积单位
     //
-    public static final Unit<Area> 平方米 = addUnit(SQUARE_METRE, "平米");
-    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("c㎡", SQUARE_METRE.divide(10000), IDENTITY), "平方厘米");
-    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("m㎡", SQUARE_METRE.divide(1000000), IDENTITY), "平方毫米");
+    public static final Unit<Area> 平方米 = addUnit(new TransformedUnit<>("m²", "平米", SQUARE_METRE, IDENTITY), "平米");
+    public static final Unit<Area> 平方厘米 = addUnit(new TransformedUnit<>("cm²", SQUARE_METRE.divide(10000), IDENTITY), "平方厘米");
+    public static final Unit<Area> 平方毫米 = addUnit(new TransformedUnit<>("mm²", SQUARE_METRE.divide(1000000), IDENTITY), "平方毫米");
 
     //
     // 体积单位
     //
-    public static final Unit<Volume> 立方米 = addUnit(CUBIC_METRE, "立方米");
+    public static final Unit<Volume> 立方米 = addUnit(new TransformedUnit<>("m³", "立方米", CUBIC_METRE, IDENTITY), "立方米");
     public static final Unit<Volume> 立方厘米 = addUnit(new TransformedUnit<>("cm³", CUBIC_METRE.divide(1000000), IDENTITY), "立方厘米");
     public static final Unit<Volume> 立方毫米 = addUnit(new TransformedUnit<>("mm³", CUBIC_METRE.divide(1000000000), IDENTITY), "立方毫米");
 
