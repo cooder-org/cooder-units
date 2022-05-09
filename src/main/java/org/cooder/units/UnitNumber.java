@@ -259,11 +259,7 @@ public final class UnitNumber<Q extends Quantity<Q>> {
             assertMustBe(that);
         }
 
-        if(that instanceof ProductUnit) {
-            if(!(u instanceof ProductUnit)) {
-                throw unitNotMatch(u, that);
-            }
-
+        if(that instanceof ProductUnit && u instanceof ProductUnit) {
             ProductUnit<Q> pu1 = (ProductUnit<Q>) u;
             ProductUnit<Q> pu2 = (ProductUnit<Q>) that;
             if(pu1.getUnitCount() != pu2.getUnitCount()) {
@@ -278,6 +274,8 @@ public final class UnitNumber<Q extends Quantity<Q>> {
                     assertMustEq(u1, u2);
                 }
             }
+        } else if(that instanceof ProductUnit || u instanceof ProductUnit) {
+            assertMustEq(u, that);
         }
     }
 
