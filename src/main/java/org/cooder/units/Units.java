@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.measure.Unit;
 import javax.measure.quantity.Angle;
@@ -46,6 +47,7 @@ public final class Units {
     private static final Set<Unit<?>> ALL_UNITS = new HashSet<>();
     private static final Map<String, Unit<?>> SYMBOL_MAP = new HashMap<>();
     private static final Map<String, Unit<?>> NAME_MAP = new HashMap<>();
+    private static final Map<String, Unit<?>> parsedUnitCache = new ConcurrentHashMap<>();
 
     //
     // 无量纲单位
@@ -187,8 +189,19 @@ public final class Units {
      * @return Unit实例
      */
     public static Unit<?> parse(String symbol) {
-        String e = String.format("0 %s", symbol);
-        return SimpleQuantityFormat.getInstance("n u").parse(e).getUnit();
+        return parse(symbol, false);
+    }
+
+    public static Unit<?> parse(String symbol, boolean cache) {
+        Unit<?> u = cache ? parsedUnitCache.get(symbol) : null;
+        if (u == null) {
+            String e = "0 " + symbol;
+            u = SimpleQuantityFormat.getInstance("n u").parse(e).getUnit();
+            if (cache) {
+                parsedUnitCache.put(symbol, u);
+            }
+        }
+        return u;
     }
 
     static Unit<?> getUnit(String string) {
