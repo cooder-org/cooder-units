@@ -94,5 +94,12 @@ public class UnitsTest {
     public void testParse() {
         Unit<?> u = Units.parse("千克/桶");
         Assert.assertTrue("kg/桶".equals(u.toString()));
+
+        Unit<?> u1 = Units.parse("千克/桶", true);
+        Assert.assertTrue("kg/桶".equals(u1.toString()));
+        Assert.assertTrue(u != u1);
+
+        Unit<?> u2 = Units.parse("千克/桶", true);
+        Assert.assertTrue(u1 == u2);
     }
 }
