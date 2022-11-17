@@ -26,6 +26,11 @@ import tech.units.indriya.unit.ProductUnit;
  * @param <Q> 量的类型
  */
 public final class UnitNumber<Q extends Quantity<Q>> {
+
+    static {
+        Calculus.setCurrentNumberSystem(new CustomNumberSystem());
+    }
+
     public static final UnitNumber<?> UNKNOWN_NUMBER = new UnitNumber<>(1, Units.未知);
 
     private final Quantity<Q> q;
