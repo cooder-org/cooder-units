@@ -37,11 +37,16 @@ import tech.units.indriya.AbstractUnit;
 import tech.units.indriya.format.SimpleQuantityFormat;
 import tech.units.indriya.format.SimpleUnitFormat;
 import tech.units.indriya.function.AddConverter;
+import tech.units.indriya.function.Calculus;
 import tech.units.indriya.function.MultiplyConverter;
 import tech.units.indriya.unit.AlternateUnit;
 import tech.units.indriya.unit.TransformedUnit;
 
 public final class Units {
+    static {
+        Calculus.setCurrentNumberSystem(new CustomNumberSystem());
+    }
+
     private static final tech.units.indriya.unit.Units BASIC_UNITS = tech.units.indriya.unit.Units.getInstance();
 
     private static final Set<Unit<?>> ALL_UNITS = new HashSet<>();
