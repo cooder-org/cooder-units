@@ -284,7 +284,12 @@ public final class Units {
         return addUnit(AlternateUnit.<Dimensionless>of(ONE, symbol, name).asType(SKU.class), name);
     }
 
-    static Collection<Unit<?>> all() {
+    /**
+     * 所有单位
+     *
+     * @return 所有单位
+     */
+    public static Collection<Unit<?>> all() {
         return new ArrayList<>(ALL_UNITS);
     }
 
