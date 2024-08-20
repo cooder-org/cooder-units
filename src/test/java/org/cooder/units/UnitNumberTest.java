@@ -6,6 +6,8 @@ import static org.cooder.units.Units.千克;
 import static org.cooder.units.Units.厘米;
 import static org.cooder.units.Units.平方米;
 import static org.cooder.units.Units.米;
+import static tech.units.indriya.function.AbstractConverter.*;
+import static tech.units.indriya.unit.Units.*;
 
 import java.math.BigDecimal;
 
@@ -19,6 +21,8 @@ import org.cooder.units.quantity.UNKNOWN;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import tech.units.indriya.unit.TransformedUnit;
 
 public class UnitNumberTest {
     @BeforeClass
@@ -47,7 +51,7 @@ public class UnitNumberTest {
         perimeter = length.add(width);
         Assert.assertTrue("10.2 m".equals(perimeter.toString()));
 
-        Units.addUnit(Units.元.divide(100), "分");
+        Units.addUnit(new TransformedUnit<>("", "分", Units.元.divide(100), IDENTITY), "分");
         UnitNumber<Money> s1 = parse("10 元").asType(Money.class);
         UnitNumber<Money> s2 = parse("10 分").asType(Money.class);
         UnitNumber<Money> s3 = s1.add(s2);
