@@ -256,6 +256,9 @@ public final class UnitNumber<Q extends Quantity<Q>> {
     private void checkDimensionless(Unit<Q> that) {
         Unit<Q> u = q.getUnit();
         if(q.getUnit().isCompatible(Units.ONE)) {
+            if(q.getUnit().getSystemUnit() == that.getSystemUnit()) {
+                return;
+            }
             assertMustBe(that);
         }
 

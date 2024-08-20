@@ -46,6 +46,12 @@ public class UnitNumberTest {
         UnitNumber<Length> width = parse("20 cm").asType(Length.class);
         perimeter = length.add(width);
         Assert.assertTrue("10.2 m".equals(perimeter.toString()));
+
+        Units.addUnit(Units.元.divide(100), "分");
+        UnitNumber<Money> s1 = parse("10 元").asType(Money.class);
+        UnitNumber<Money> s2 = parse("10 分").asType(Money.class);
+        UnitNumber<Money> s3 = s1.add(s2);
+        Assert.assertTrue("10.1 元".equals(s3.toString()));
     }
 
     @Test
